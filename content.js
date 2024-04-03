@@ -1,24 +1,28 @@
 let upperCase = false;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  const inputElements = document.querySelectorAll('input[type="text"]');
+  const allElements = document.querySelectorAll('input[type="text"], textarea');
+
+  const filteredElements = Array.from(allElements).filter(function (el) {
+    return !(el.tagName.toLowerCase() === 'textarea' && el.name === 'Field11');
+  });
 
   if (request.action === 'activated') {
-    inputElements.forEach(function (input) {
+    filteredElements.forEach(function (input) {
       input.addEventListener('input', capitalizeInputValue);
     });
 
-    inputElements.forEach(function (input) {
+    filteredElements.forEach(function (input) {
       input.addEventListener('change', handleonChangeInputValue);
     });
   }
 
   if (request.action === 'deactivated') {
-    inputElements.forEach(function (input) {
+    filteredElements.forEach(function (input) {
       input.removeEventListener('input', capitalizeInputValue);
     });
 
-    inputElements.forEach(function (input) {
+    filteredElements.forEach(function (input) {
       input.removeEventListener('change', handleonChangeInputValue);
     });
   }
@@ -29,10 +33,16 @@ function handleonChangeInputValue(event) {
 
   inputValue = cleanString(inputValue);
 
-  inputValue = inputValue.replace(', ấp', ', Ấp');
+  inputValue = inputValue.replace('Thị Trấn', 'Thị trấn');
+  inputValue = inputValue.replace(', Ấp', ', ấp');
   inputValue = inputValue.replace(', Xã', ', xã');
   inputValue = inputValue.replace(', Huyện', ', huyện');
   inputValue = inputValue.replace(', Tỉnh', ', tỉnh');
+  inputValue = inputValue.replace('Thành Phố', 'Thành phố');
+  inputValue = inputValue.replace('Bệnh Viện', 'Bệnh viện');
+
+  inputValue = inputValue.replace('Phó Chủ Tịch ', 'Phó chủ tịch ');
+  inputValue = inputValue.replace('Chủ Tịch ', 'Chủ tịch ');
 
   event.target.value = inputValue;
 }

@@ -6,16 +6,20 @@ document.addEventListener('DOMContentLoaded', function () {
   console.log('DOMContentLoaded');
 
   if (isActiveInit) {
-    activateButton.textContent = 'Activate';
+    activateButton.textContent = 'Activated';
+    activateButton.classList = 'btn btn-success';
   } else {
-    activateButton.textContent = 'Deactivate';
+    activateButton.textContent = 'Deactivated';
+    activateButton.classList = 'btn btn-danger';
   }
 
   activateButton.addEventListener('click', function () {
     let isActive = localStorage.getItem('isActive') == 'true' ? false : true;
-    let activeText = isActive ? 'Activate' : 'Deactivate';
+    let activeText = isActive ? 'Activated' : 'Deactivated';
+    let classList = isActive ? 'btn btn-success' : 'btn btn-danger';
 
     activateButton.textContent = activeText;
+    activateButton.classList = classList;
     localStorage.setItem('isActive', isActive);
 
     const action = isActive ? 'activated' : 'deactivated';
